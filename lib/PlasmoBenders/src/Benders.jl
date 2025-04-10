@@ -421,6 +421,9 @@ function BendersAlgorithm(
 
         _init_ext!(optimizer)
 
+        optimizer.ext["time_master"] = [0.]
+        optimizer.ext["time_optimize"] = [0.]
+
         # Add second object to solve order
         _add_second_object!(optimizer, get_relaxed_init_cuts(optimizer))
 
@@ -654,8 +657,10 @@ function _forward_pass!(optimizer::BendersAlgorithm)
     ########## Solve the first node ############
     root_object = optimizer.solve_order[1]
 
-    JuMP.optimize!(root_object)
-
+    
+    time_root = @elapsed JuMP.optimize!(root_object)
+    optimizer.ext["time_master"][1] += time_root
+    
     root_object_feasibility = _check_termination_status(optimizer, root_object, 1)
 
     # Get initial objective
