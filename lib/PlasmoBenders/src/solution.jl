@@ -151,8 +151,10 @@ function _optimize_in_forward_pass!(optimizer, i, ub)
     end
 
     # Optimize the next node
-    optimize!(next_object)
+    time_solve = @elapsed optimize!(next_object)
 
+    optimizer.ext["time_optimize"][1] += time_solve
+    
     # Check termination status
     object_termination_status = _check_termination_status(optimizer, next_object, i)
 
