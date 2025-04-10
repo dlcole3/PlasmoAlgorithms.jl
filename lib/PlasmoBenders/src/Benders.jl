@@ -660,6 +660,7 @@ function _forward_pass!(optimizer::BendersAlgorithm)
     
     time_root = @elapsed JuMP.optimize!(root_object)
     optimizer.ext["time_master"][1] += time_root
+    optimizer.ext["time_optimize"][1] += time_root
     
     root_object_feasibility = _check_termination_status(optimizer, root_object, 1)
 
